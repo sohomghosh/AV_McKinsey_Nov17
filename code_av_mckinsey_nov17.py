@@ -42,10 +42,19 @@ train.groupby('Junction').agg({'Vehicles' : np.mean})
 
 X_train_all = train_test[0:len(train.index)]
 
-
 X_train = X_train_all.sample(frac=0.80, replace=False)
 X_valid = pd.concat([X_train_all, X_train]).drop_duplicates(keep=False)
 X_test = train_test[len(train.index):len(train_test.index)]
+'''
+
+#Better Approach
+np.random.seed(40)
+msk = np.random.rand(len(X_train_all)) < 0.8
+trn = X_train[msk]
+val = X_train[~msk]
+
+'''
+
 
 dtrain = xgb.DMatrix(X_train[features], X_train['Vehicles'], missing=np.nan)
 dvalid = xgb.DMatrix(X_valid[features], X_valid['Vehicles'], missing=np.nan)
